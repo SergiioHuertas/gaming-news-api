@@ -1,11 +1,18 @@
 require('dotenv').config();
 const https = require('https');
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 
 const desiredPort = process.env.PORT || 3000;
 const apiKey = process.env.API_KEY;
 
+const limit = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+});
+
 const app = express();
+app.use(limit);
 
 app.get('/', (req, res) => {
   const { q, language, page, pageSize } = req.query;
